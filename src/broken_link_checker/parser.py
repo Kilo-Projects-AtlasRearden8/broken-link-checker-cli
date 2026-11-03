@@ -79,8 +79,8 @@ def extract_links(html_content: str, source_file: Path) -> Iterator[Link]:
         for pattern, tag, attr in patterns:
             for match in re.finditer(pattern, line, re.IGNORECASE):
                 url = match.group(1)
-                # Skip empty URLs and javascript: links
-                if url and not url.startswith("javascript:"):
+                # Skip empty URLs, javascript: links, mailto:, tel:, and data: URIs
+                if url and not url.startswith(("javascript:", "mailto:", "tel:", "data:")):
                     yield Link(
                         url=url,
                         source_file=source_file,

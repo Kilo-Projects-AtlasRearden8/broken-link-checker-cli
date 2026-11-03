@@ -179,6 +179,57 @@ class TestCheckLink:
 
             assert result.status == LinkStatus.OK
 
+    def test_check_mailto_link(self) -> None:
+        """Test checking a mailto: link (treated as external)."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+
+            link = Link(
+                url="mailto:author@example.com",
+                source_file=root / "index.html",
+                line_number=1,
+                tag="a",
+                attribute="href"
+            )
+
+            result = check_link(link, root)
+
+            assert result.status == LinkStatus.EXTERNAL
+
+    def test_check_tel_link(self) -> None:
+        """Test checking a tel: link (treated as external)."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+
+            link = Link(
+                url="tel:+15551234567",
+                source_file=root / "index.html",
+                line_number=1,
+                tag="a",
+                attribute="href"
+            )
+
+            result = check_link(link, root)
+
+            assert result.status == LinkStatus.EXTERNAL
+
+    def test_check_data_uri(self) -> None:
+        """Test checking a data: URI (treated as external)."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+
+            link = Link(
+                url="data:image/png;base64,abc",
+                source_file=root / "index.html",
+                line_number=1,
+                tag="img",
+                attribute="src"
+            )
+
+            result = check_link(link, root)
+
+            assert result.status == LinkStatus.EXTERNAL
+
 
 class TestCheckDirectory:
     """Tests for the check_directory function."""

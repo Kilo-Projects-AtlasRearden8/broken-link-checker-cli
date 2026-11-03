@@ -197,6 +197,46 @@ class TestExtractLinks:
         assert len(links) == 1
         assert links[0].url == "page.html"
 
+    def test_skip_mailto_links(self) -> None:
+        """Test that mailto: links are skipped."""
+        html = '<a href="mailto:author@example.com">Email</a>'
+        links = list(extract_links(html, Path("index.html")))
+
+        assert len(links) == 0
+
+    def test_skip_tel_links(self) -> None:
+        """Test that tel: links are skipped."""
+        html = '<a href="tel:+15551234567">Call</a>'
+        links = list(extract_links(html, Path("index.html")))
+
+        assert len(links) == 0
+
+    def test_skip_data_uris(self) -> None:
+        """Test that data: URIs are skipped."""
+        # 1x1 transparent PNG base64 (split for line length)
+        data_uri = (
+            "data:image/png;base64,"
+            "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
+        )
+        html = f'<img src="{data_uri}" alt="Pixel">'
+        links = list(extract_links(html, Path("index.html")))
+
+        assert len(links) == 0
+
+    def test_skip_mixed_special_links(self) -> None:
+        """Test that javascript:, mailto:, tel:, and data: are all skipped."""
+        html = '''
+        <a href="javascript:void(0)">JS</a>
+        <a href="mailto:test@example.com">Email</a>
+        <a href="tel:+15551234567">Call</a>
+        <img src="data:image/png;base64,abc">
+        <a href="page.html">Real Link</a>
+        '''
+        links = list(extract_links(html, Path("index.html")))
+
+        assert len(links) == 1
+        assert links[0].url == "page.html"
+
 
 class TestFindHtmlFiles:
     """Tests for the find_html_files function."""
