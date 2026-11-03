@@ -1,0 +1,61 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "broken-link-checker"
+version = "0.1.0"
+description = "Local HTML broken link checker for author and small-business sites"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+dependencies = [
+    "click>=8.0",
+]
+authors = [
+    {name = "Asdale Dynamics, LLC", email = "contact@asdale-dynamics.com"}
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Internet :: WWW/HTTP :: Site Management :: Link Checking",
+    "Topic :: Text Processing :: Markup :: HTML",
+]
+[project.urls]
+Homepage = "https://github.com/dylanasdale/broken-link-checker"
+Repository = "https://github.com/dylanasdale/broken-link-checker"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "ruff>=0.1.0",
+]
+
+[project.scripts]
+broken-link-checker = "broken_link_checker.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+lint.select = ["E", "F", "I", "W", "UP", "B", "C4", "PTH"]
+lint.ignore = ["PTH123"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"

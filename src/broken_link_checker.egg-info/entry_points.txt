@@ -1,0 +1,2 @@
+[console_scripts]
+broken-link-checker = broken_link_checker.cli:main
